@@ -43,6 +43,5 @@ func GetToken(ctx context.Context, code string) (token *oauth2.Token, err error)
 		logger.Error(err)
 		return nil, err
 	}
-	oauthConfig.Client()
 	return token, err
 }
