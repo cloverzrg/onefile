@@ -10,11 +10,6 @@ import (
 
 func main() {
 	var err error
-	err = db.Connect()
-	if err != nil {
-		logger.Error(err)
-		os.Exit(-1)
-	}
 	err = api.Start()
 	if err != nil {
 		logger.Error(err)
@@ -24,6 +19,11 @@ func main() {
 
 func init() {
 	var err error
+	err = db.Connect()
+	if err != nil {
+		logger.Error(err)
+		os.Exit(-1)
+	}
 	err = db.DB.AutoMigrate(&model.Token{})
 	if err != nil {
 		logger.Panic(err)
