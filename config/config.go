@@ -10,6 +10,12 @@ import (
 )
 
 type config struct {
+	OneDrive struct {
+		ClientId     string `json:"client_id"`
+		ClientSecret string `json:"client_secret"`
+		RedirectUri  string `json:"redirect_uri"`
+		Scope        string `json:"scope"`
+	} `json:"onedrive"`
 }
 
 type consulConfig struct {

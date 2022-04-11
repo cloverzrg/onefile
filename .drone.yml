@@ -9,9 +9,9 @@ platform:
 clone:
   depth: 1
 
-node:
-  cloud: ali
-  location: hongkong
+#node:
+#  cloud: ali
+#  location: hongkong
 
 volumes:
   - name: cache
