@@ -10,6 +10,7 @@ import (
 )
 
 type config struct {
+	Baseurl  string `json:"baseurl"`
 	OneDrive struct {
 		ClientId     string `json:"client_id"`
 		ClientSecret string `json:"client_secret"`

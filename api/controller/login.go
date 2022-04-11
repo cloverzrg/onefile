@@ -14,7 +14,8 @@ func Index(c *gin.Context) {
 func Login(c *gin.Context) {
 	odConfig := config.Config.OneDrive
 	scope := strings.ReplaceAll(odConfig.Scope, " ", "%20")
-	url := fmt.Sprintf("https://login.microsoftonline.com/common/oauth2/v2.0/authorize?client_id=%s&response_type=code&redirect_uri=%s&scope=%s", odConfig.ClientId, odConfig.RedirectUri, scope)
+	uri := config.Config.Baseurl + odConfig.RedirectUri
+	url := fmt.Sprintf("https://login.microsoftonline.com/common/oauth2/v2.0/authorize?client_id=%s&response_type=code&redirect_uri=%s&scope=%s", odConfig.ClientId, uri, scope)
 	c.Redirect(302, url)
 }
 
