@@ -4,6 +4,7 @@ import (
 	"github.com/cloverzrg/onefile/api"
 	"github.com/cloverzrg/onefile/db"
 	"github.com/cloverzrg/onefile/logger"
+	"github.com/cloverzrg/onefile/model"
 	"os"
 )
 
@@ -18,5 +19,13 @@ func main() {
 	if err != nil {
 		logger.Error(err)
 		os.Exit(-1)
+	}
+}
+
+func init() {
+	var err error
+	err = db.DB.AutoMigrate(&model.Token{})
+	if err != nil {
+		logger.Panic(err)
 	}
 }

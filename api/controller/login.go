@@ -1,10 +1,8 @@
 package controller
 
 import (
-	"fmt"
-	"github.com/cloverzrg/onefile/config"
+	"github.com/cloverzrg/onefile/credential"
 	"github.com/gin-gonic/gin"
-	"strings"
 )
 
 func Index(c *gin.Context) {
@@ -12,13 +10,16 @@ func Index(c *gin.Context) {
 }
 
 func Login(c *gin.Context) {
-	odConfig := config.Config.OneDrive
-	scope := strings.ReplaceAll(odConfig.Scope, " ", "%20")
-	uri := config.Config.Baseurl + odConfig.RedirectUri
-	url := fmt.Sprintf("https://login.microsoftonline.com/common/oauth2/v2.0/authorize?client_id=%s&response_type=code&redirect_uri=%s&scope=%s", odConfig.ClientId, uri, scope)
-	c.Redirect(302, url)
+	c.Redirect(302, credential.GetAuthUri())
 }
 
 func Callback(c *gin.Context) {
-	c.String(200, "here is onedrive callback!")
+	code := c.Query("code")
+	//session_state := c.Query("session_state")
+	token, err := credential.GetToken(c, code)
+	if err != nil {
+		c.JSON(500, "500")
+		return
+	}
+	c.JSON(200, token)
 }
