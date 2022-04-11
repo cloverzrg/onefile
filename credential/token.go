@@ -18,7 +18,7 @@ func init() {
 		ClientID:     config.Config.OneDrive.ClientId,
 		ClientSecret: config.Config.OneDrive.ClientSecret,
 		Endpoint:     microsoft.AzureADEndpoint(""),
-		RedirectURL:  config.Config.OneDrive.RedirectUri,
+		RedirectURL:  config.Config.Baseurl + config.Config.OneDrive.RedirectUri,
 		Scopes:       config.Config.OneDrive.Scope,
 	}
 }
