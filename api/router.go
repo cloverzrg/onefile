@@ -9,4 +9,5 @@ func SetRouter(r *gin.Engine) {
 	r.GET("/", controller.Index)
 	r.GET("/login", controller.Login)
 	r.GET("/callback", controller.Callback)
+	r.GET("/token", controller.Token)
 }

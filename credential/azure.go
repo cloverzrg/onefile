@@ -12,6 +12,7 @@ import (
 
 type AzureIdentityAuthenticationProvider struct {
 	tokenSource oauth2.TokenSource
+	UserId      string
 }
 
 func (a AzureIdentityAuthenticationProvider) GetToken(ctx context.Context, options policy.TokenRequestOptions) (*azcore.AccessToken, error) {
@@ -47,5 +48,6 @@ func NewAzureIdentityAuthenticationProviderByUserId(userId string) (a AzureIdent
 	}
 	return AzureIdentityAuthenticationProvider{
 		tokenSource: oauthConfig.TokenSource(context.Background(), oauthToken),
+		UserId:      userId,
 	}, err
 }

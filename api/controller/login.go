@@ -1,8 +1,11 @@
 package controller
 
 import (
+	"github.com/Azure/azure-sdk-for-go/sdk/azcore/policy"
 	"github.com/cloverzrg/onefile/credential"
+	"github.com/cloverzrg/onefile/logger"
 	"github.com/cloverzrg/onefile/service/onedrive"
+	"github.com/gin-contrib/sessions"
 	"github.com/gin-gonic/gin"
 )
 
@@ -17,10 +20,24 @@ func Login(c *gin.Context) {
 func Callback(c *gin.Context) {
 	code := c.Query("code")
 	//session_state := c.Query("session_state")
-	token, err := onedrive.Callback(c, code)
+	userId, err := onedrive.Callback(c, code)
 	if err != nil {
 		c.JSON(500, "500")
 		return
 	}
+
+	session := sessions.Default(c)
+	session.Set("userId", userId)
+	session.Save()
+	c.JSON(200, "login success")
+}
+
+func Token(c *gin.Context) {
+	authProvider, err := credential.NewAzureIdentityAuthenticationProviderByUserId(c.GetString("userId"))
+	if err != nil {
+		logger.Error(err)
+		return
+	}
+	token, err := authProvider.GetToken(c, policy.TokenRequestOptions{})
 	c.JSON(200, token)
 }

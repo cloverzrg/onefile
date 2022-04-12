@@ -2,7 +2,7 @@ package onedrive
 
 import (
 	"context"
-	"encoding/json"
+	"fmt"
 	"github.com/Azure/azure-sdk-for-go/sdk/azcore"
 	"github.com/cloverzrg/onefile/credential"
 	"github.com/cloverzrg/onefile/db"
@@ -45,26 +45,32 @@ func getClientByAuthProvider(authProvider azcore.TokenCredential) (client *msgra
 	return client, err
 }
 
-func Callback(ctx context.Context, code string) (token *oauth2.Token, err error) {
+func Callback(ctx context.Context, code string) (userId string, err error) {
+	var token *oauth2.Token
 	token, err = credential.GetTokenByCode(ctx, code)
 	client, err := getClientByToken(token)
 	if err != nil {
 		logger.Errorf("Error creating client: %v\n", err)
-		return nil, err
+		return userId, err
 	}
 	userInfo, err := client.Me().Get(nil)
 	if err != nil {
 		logger.Errorf("Error creating client: %v\n", err)
-		return nil, err
+		return userId, err
 	}
-	bytes, _ := json.Marshal(userInfo)
-	logger.Info(string(bytes))
 
-	tokenByUserId, err := model.GetTokenByUserId(db.DB, *userInfo.GetId())
+	if userInfo.GetId() == nil || len(*userInfo.GetId()) == 0 {
+		err = fmt.Errorf("get userId failed")
+		logger.Errorf("Error get user info: %v\n", err)
+		return userId, err
+	}
+	userId = *userInfo.GetId()
+
+	tokenByUserId, err := model.GetTokenByUserId(db.DB, userId)
 	if err != nil {
 		if err == gorm.ErrRecordNotFound {
 			token2 := &model.Token{
-				UserId:       *userInfo.GetId(),
+				UserId:       userId,
 				AccessToken:  token.AccessToken,
 				RefreshToken: token.RefreshToken,
 				Expiry:       token.Expiry,
@@ -73,11 +79,12 @@ func Callback(ctx context.Context, code string) (token *oauth2.Token, err error)
 			token2, err = model.CreateToken(db.DB, token2)
 			if err != nil {
 				logger.Error(err)
-				return nil, err
+				return userId, err
 			}
+			return userId, err
 		} else {
 			logger.Error(err)
-			return token, err
+			return userId, err
 		}
 	}
 	tokenByUserId.AccessToken = token.AccessToken
@@ -87,7 +94,7 @@ func Callback(ctx context.Context, code string) (token *oauth2.Token, err error)
 	err = tokenByUserId.Save(db.DB)
 	if err != nil {
 		logger.Error(err)
-		return token, err
+		return userId, err
 	}
-	return token, err
+	return userId, err
 }
