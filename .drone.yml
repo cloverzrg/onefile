@@ -28,9 +28,6 @@ volumes:
 steps:
   - name: build-docker
     image: docker:dind
-    when:
-      event:
-        - tag
     environment:
       password:
         from_secret: registry-password
