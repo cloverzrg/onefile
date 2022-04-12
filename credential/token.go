@@ -17,7 +17,7 @@ func init() {
 	oauthConfig = oauth2.Config{
 		ClientID:     config.Config.OneDrive.ClientId,
 		ClientSecret: config.Config.OneDrive.ClientSecret,
-		Endpoint:     microsoft.AzureADEndpoint(""),
+		Endpoint:     microsoft.AzureADEndpoint("common"),
 		RedirectURL:  config.Config.Baseurl + config.Config.OneDrive.RedirectUri,
 		Scopes:       config.Config.OneDrive.Scope,
 	}
@@ -37,6 +37,8 @@ func GetToken(ctx context.Context, code string) (token *oauth2.Token, err error)
 		Model:        gorm.Model{},
 		AccessToken:  token.AccessToken,
 		RefreshToken: token.RefreshToken,
+		Expiry:       token.Expiry,
+		TokenType:    token.TokenType,
 	}
 	err = db.DB.Save(&token2).Error
 	if err != nil {
