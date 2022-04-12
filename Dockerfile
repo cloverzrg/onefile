@@ -4,7 +4,7 @@ ARG BUILDPLATFORM
 ARG TARGETOS
 ARG TARGETARCH
 ARG DRONE_TAG
-ENV CGO_ENABLED 1
+ENV CGO_ENABLED 0
 ENV GOOS $TARGETOS
 ENV GOARCH $TARGETARCH
 RUN echo "I am running on $BUILDPLATFORM, building for $TARGETPLATFORM, GOOS $GOOS, GOARCH $GOARCH"
@@ -13,7 +13,7 @@ RUN pwd
 COPY . /go/src/onefile
 WORKDIR /go/src/onefile
 RUN ls -lah
-RUN go build -x -trimpath -a -ldflags '-extldflags "-static -fpic -s -w"' -o onefile
+RUN go build -o onefile
 
 FROM --platform=$TARGETPLATFORM alpine:latest
 RUN apk update && apk add --no-cache ca-certificates tzdata \

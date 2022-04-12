@@ -1,7 +1,7 @@
 package db
 
 import (
-	"gorm.io/driver/sqlite"
+	"github.com/iyear/sqlite"
 	"gorm.io/gorm"
 	"os"
 )
