@@ -52,7 +52,7 @@ steps:
         )
       - ls -lah && pwd
       - docker login --username=$username -p $password
-#      - docker buildx create --use
+      - docker buildx create --use
       - docker buildx build --platform linux/arm64,linux/amd64,linux/arm -t cloverzrg/onefile:latest --push .
 
   - name: ssh-deploy
