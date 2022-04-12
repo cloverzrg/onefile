@@ -2,46 +2,60 @@ kind: pipeline
 name: default
 type: docker
 
-platform:
-  os: linux
-  arch: amd64
-
 clone:
   depth: 1
 
+
+platform:
+  os: linux
+  arch: arm64
+
 node:
-  cloud: tencent
-  location: hongkong
+  cloud: oracle
+  location: tokyo
 
 volumes:
-  - name: cache
+  - name: dockersock
+    host:
+      path: /var/run/docker.sock
+  - name: cache-docker-buildx-0.8.2
+    host:
+      path: /tmp/drone/cache/docker-buildx-0.8.2
+  - name: gomodcache
     host:
       path: /var/docker/drone-runner/cache/gomod
 
-
 steps:
-  - name: build
-    image: golang:alpine
-    volumes:
-      - name: cache
-        path: /go/pkg/mod
-    commands:
-      - apk update && apk add --no-cache git build-base tzdata
-      - go mod download
-      - go build -o onefile
-
-  - name: docker-build-push
-    image: plugins/docker
+  - name: build-docker
+    image: docker:dind
     when:
-      branch:
-        - master
-    settings:
-      repo:  cloverzrg/onefile
-      tags: latest
-      username:
-        from_secret: registry-username
+      event:
+        - tag
+    environment:
       password:
         from_secret: registry-password
+      username:
+        from_secret: registry-username
+    volumes:
+      - name: dockersock
+        path: /var/run/docker.sock
+      - name: cache-docker-buildx-0.8.2
+        path: /root/.docker/cli-plugins
+      - name: gomodcache
+        path: /go/pkg/mod
+    commands:
+      - |
+        (
+          set -x; \
+          FILE=~/.docker/cli-plugins/docker-buildx; \
+          [ ! -f $FILE ] && \
+            wget -O $FILE https://github.com/docker/buildx/releases/download/v0.8.2/buildx-v0.8.2.linux-arm64 \
+            && chmod +x $FILE \
+          || true
+        )
+      - docker login --username=$username -p $password
+      - docker buildx create --use
+      - docker buildx build --platform linux/arm64,linux/amd64,linux/arm -t cloverzrg/onefile:latest --push .
 
   - name: ssh-deploy
     image: appleboy/drone-ssh
@@ -62,3 +76,47 @@ steps:
         - docker-compose down && docker-compose up -d
         - sleep 5
         - docker-compose logs --tail=200
+#
+#steps:
+#  - name: build
+#    image: golang:alpine
+#    volumes:
+#      - name: cache
+#        path: /go/pkg/mod
+#    commands:
+#      - apk update && apk add --no-cache git build-base tzdata
+#      - go mod download
+#      - go build -o onefile
+#
+#  - name: docker-build-push
+#    image: plugins/docker
+#    when:
+#      branch:
+#        - master
+#    settings:
+#      repo:  cloverzrg/onefile
+#      tags: latest
+#      username:
+#        from_secret: registry-username
+#      password:
+#        from_secret: registry-password
+#
+#  - name: ssh-deploy
+#    image: appleboy/drone-ssh
+#    when:
+#      branch:
+#        - master
+#    settings:
+#      host:
+#        from_secret: deploy_host
+#      username: root
+#      port: 22
+#      key:
+#        from_secret: ssh_key
+#      script:
+#        - cd /var/docker/onefile
+#        - echo "pulling image"
+#        - docker-compose pull -q
+#        - docker-compose down && docker-compose up -d
+#        - sleep 5
+#        - docker-compose logs --tail=200
