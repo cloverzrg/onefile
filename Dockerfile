@@ -7,7 +7,6 @@ ARG DRONE_TAG
 ENV CGO_ENABLED 0
 ENV GOOS $TARGETOS
 ENV GOARCH $TARGETARCH
-COPY
 RUN echo "I am running on $BUILDPLATFORM, building for $TARGETPLATFORM, GOOS $GOOS, GOARCH $GOARCH"
 RUN apk update && apk add --no-cache git build-base
 RUN pwd
