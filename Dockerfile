@@ -18,10 +18,9 @@ RUN go build -o onefile
 FROM --platform=$TARGETPLATFORM alpine:latest
 RUN apk update && apk add --no-cache ca-certificates tzdata \
     && rm -rf /var/cache/apk/*
-COPY --from=builder /go/onefile/onefile /app/
+COPY --from=builder /go/src/onefile/onefile /app/onefile
 ENV ENV prod
 EXPOSE 80
-RUN mkdir /app/data
 VOLUME /app/data
 WORKDIR /app
 CMD ["/app/onefile"]
