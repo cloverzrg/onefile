@@ -8,7 +8,6 @@ import (
 )
 
 var consulClient *api.Client
-var firstPrint bool
 
 func readConfigFromConfig(address, token, configKey string) (err error) {
 	defer func() {
@@ -39,10 +38,6 @@ func readConfigFromConfig(address, token, configKey string) (err error) {
 	err = BindJson(kvPair.Value)
 	if err != nil {
 		return err
-	}
-	if !firstPrint {
-		logger.Info(string(kvPair.Value))
-		firstPrint = true
 	}
 	return err
 }
