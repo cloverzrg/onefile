@@ -2,6 +2,7 @@ package controller
 
 import (
 	"github.com/cloverzrg/onefile/credential"
+	"github.com/cloverzrg/onefile/service/onedrive"
 	"github.com/gin-gonic/gin"
 )
 
@@ -16,7 +17,7 @@ func Login(c *gin.Context) {
 func Callback(c *gin.Context) {
 	code := c.Query("code")
 	//session_state := c.Query("session_state")
-	token, err := credential.GetToken(c, code)
+	token, err := onedrive.Callback(c, code)
 	if err != nil {
 		c.JSON(500, "500")
 		return
