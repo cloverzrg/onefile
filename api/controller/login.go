@@ -30,7 +30,7 @@ func Callback(c *gin.Context) {
 	//session_state := c.Query("session_state")
 	userId, err := onedrive.Callback(c, code)
 	if err != nil {
-		c.JSON(500, "500")
+		c.JSON(500, err)
 		return
 	}
 

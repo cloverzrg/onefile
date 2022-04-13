@@ -61,7 +61,7 @@ func Callback(ctx context.Context, code string) (userId string, err error) {
 
 	if userInfo.GetId() == nil || len(*userInfo.GetId()) == 0 {
 		err = fmt.Errorf("get userId failed")
-		logger.Errorf("Error get user info: %v\n", err)
+		logger.Error(err)
 		return userId, err
 	}
 	userId = *userInfo.GetId()
