@@ -18,6 +18,14 @@ func Login(c *gin.Context) {
 }
 
 func Callback(c *gin.Context) {
+	if c.Query("error") != "" {
+		c.String(200, c.Query("error_description"))
+		return
+	}
+	if c.Query("code") == "" {
+		c.String(200, c.Query("code is empty"))
+		return
+	}
 	code := c.Query("code")
 	//session_state := c.Query("session_state")
 	userId, err := onedrive.Callback(c, code)
