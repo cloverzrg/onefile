@@ -26,6 +26,7 @@ func (w *JsonSerializationWriter) writeRawValue(value string) {
 	w.writer = append(w.writer, value)
 }
 func (w *JsonSerializationWriter) writeStringValue(value string) {
+	value = strings.ReplaceAll(value, "\"", "\\\"")
 	w.writeRawValue("\"" + value + "\"")
 }
 func (w *JsonSerializationWriter) writePropertyName(key string) {
@@ -55,14 +56,14 @@ func (w *JsonSerializationWriter) writeObjectEnd() {
 
 // WriteStringValue writes a String value to underlying the byte array.
 func (w *JsonSerializationWriter) WriteStringValue(key string, value *string) error {
+	if key != "" && value != nil {
+		w.writePropertyName(key)
+	}
 	if value != nil {
-		if key != "" {
-			w.writePropertyName(key)
-		}
 		w.writeStringValue(*value)
-		if key != "" {
-			w.writePropertySeparator()
-		}
+	}
+	if key != "" && value != nil {
+		w.writePropertySeparator()
 	}
 	return nil
 }
@@ -830,7 +831,6 @@ func (w *JsonSerializationWriter) WriteAdditionalData(value map[string]interface
 				continue
 			}
 		}
-		//w.trimLastPropertySeparator()
 	}
 	return nil
 }

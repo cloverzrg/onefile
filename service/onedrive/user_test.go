@@ -78,4 +78,9 @@ func TestGetDrive(t *testing.T) {
 		fmt.Printf("Error retrieving resource: %v\n", err)
 	}
 	fmt.Printf("result = %+v\n", result)
+	json2, err := util.ToJson(result)
+	if err != nil {
+		t.Fatal(err)
+	}
+	t.Log(json2)
 }
