@@ -3,11 +3,12 @@ package controller
 import (
 	"github.com/gin-gonic/gin"
 	"github.com/microsoft/kiota-abstractions-go/serialization"
-	jsonserialization "github.com/microsoft/kiota-serialization-json-go"
+	textserialization "github.com/microsoft/kiota-serialization-text-go"
 )
 
 func WriteJson(data serialization.Parsable, c *gin.Context) {
-	writer := jsonserialization.NewJsonSerializationWriter()
+	//writer := jsonserialization.NewJsonSerializationWriter()
+	writer := textserialization.NewTextSerializationWriter()
 	err := data.Serialize(writer)
 	if err != nil {
 		c.AbortWithError(500, err)
