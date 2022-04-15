@@ -3,6 +3,7 @@ package onedrive
 import (
 	"fmt"
 	"github.com/cloverzrg/onefile/credential"
+	"github.com/cloverzrg/onefile/util"
 	a "github.com/microsoft/kiota-authentication-azure-go"
 	msgraphsdk "github.com/microsoftgraph/msgraph-sdk-go"
 	"github.com/microsoftgraph/msgraph-sdk-go/drives/item/root/children"
@@ -20,6 +21,12 @@ func TestGetUserInfo(t *testing.T) {
 		t.Error(err)
 	}
 	t.Log(userInfo.GetId())
+	json2, err := util.ToJson(userInfo)
+	if err != nil {
+		t.Fatal(err)
+	}
+	t.Log(json2)
+
 }
 
 func TestGetDrive(t *testing.T) {

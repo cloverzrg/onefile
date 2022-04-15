@@ -5,6 +5,7 @@ import (
 	"github.com/cloverzrg/onefile/credential"
 	"github.com/cloverzrg/onefile/logger"
 	"github.com/cloverzrg/onefile/service/onedrive"
+	"github.com/cloverzrg/onefile/util"
 	"github.com/gin-contrib/sessions"
 	"github.com/gin-gonic/gin"
 )
@@ -61,5 +62,11 @@ func GetMeInfo(c *gin.Context) {
 		logger.Error(err)
 		return
 	}
-	WriteJson(userInfo, c)
+	res, err := util.ToJson(userInfo)
+	if err != nil {
+		logger.Error(err)
+		c.AbortWithError(500, err)
+		return
+	}
+	c.String(200, res)
 }
