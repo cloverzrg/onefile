@@ -18,6 +18,8 @@ RUN apk update && apk add --no-cache ca-certificates tzdata \
     && rm -rf /var/cache/apk/*
 COPY --from=builder /go/src/onefile/onefile /app/onefile
 ENV ENV prod
+ENV CONSUL_ADDRESS consul-bootstrap:8500
+ENV CONSUL_CONFIG_PATH onefile/prod.cfg.json
 EXPOSE 80
 VOLUME /app/data
 WORKDIR /app

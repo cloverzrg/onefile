@@ -55,9 +55,9 @@ func init() {
 		return
 	}
 	ConsulConfig = consulConfig{
-		Address:    "consul-bootstrap:8500",
+		Address:    os.Getenv("CONSUL_ADDRESS"),
 		Token:      os.Getenv("CONSUL_TOKEN"),
-		ConfigFile: "onefile/prod.cfg.json",
+		ConfigFile: os.Getenv("CONSUL_CONFIG_PATH"),
 	}
 	readConfigFromConfig(ConsulConfig.Address, ConsulConfig.Token, ConsulConfig.ConfigFile)
 	go func() {

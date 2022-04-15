@@ -17,7 +17,7 @@ func readConfigFromConfig(address, token, configKey string) (err error) {
 	}()
 	cfg := api.Config{
 		Address: address,
-		Scheme:  "http",
+		Scheme:  "https",
 		Token:   token,
 	}
 	consulClient, err = api.NewClient(&cfg)
