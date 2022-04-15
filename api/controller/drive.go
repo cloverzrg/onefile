@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"github.com/cloverzrg/onefile/credential"
 	"github.com/cloverzrg/onefile/logger"
+	"github.com/cloverzrg/onefile/service/onedrive"
 	"github.com/cloverzrg/onefile/util"
 	"github.com/gin-gonic/gin"
 	a "github.com/microsoft/kiota-authentication-azure-go"
@@ -12,11 +13,15 @@ import (
 	"strings"
 )
 
-func GetFile(c *gin.Context) {
+func GetChildren(c *gin.Context) {
 	path := c.Param("path")
 	path = strings.Trim(path, "/")
 	path = "/" + path
 	logger.Info("path:", path)
+	if path == "/" {
+		GetRoot(c)
+		return
+	}
 	targetUrl := fmt.Sprintf("https://graph.microsoft.com/v1.0/me/drive/root:/%s:/children", path)
 	authenticationProvider, err := credential.NewAzureIdentityAuthenticationProviderByUserId(c.GetString("userId"))
 	if err != nil {
@@ -49,6 +54,27 @@ func GetFile(c *gin.Context) {
 	json2, err := util.ToJson(result)
 	if err != nil {
 		logger.Info(err)
+		return
+	}
+	c.String(200, json2)
+}
+
+func GetRoot(c *gin.Context) {
+	client, err := onedrive.GetClientByUserId(c.GetString("userId"))
+	if err != nil {
+		logger.Error(err)
+		return
+	}
+	driveInfo, err := client.Me().Drive().Get(nil)
+	if err != nil {
+		logger.Error(err)
+		c.JSON(500, err.Error())
+		return
+	}
+	json2, err := util.ToJson(driveInfo)
+	if err != nil {
+		logger.Error(err)
+		c.JSON(500, err.Error())
 		return
 	}
 	c.String(200, json2)
