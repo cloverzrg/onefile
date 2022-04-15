@@ -18,5 +18,5 @@ func WriteJson(data serialization.Parsable, c *gin.Context) {
 		c.AbortWithError(500, err)
 		return
 	}
-	c.String(200, string(content))
+	c.String(200, "{"+string(content)+"}")
 }
