@@ -16,7 +16,7 @@ func GetFile(c *gin.Context) {
 	path := c.Param("path")
 	path = strings.Trim(path, "/")
 	path = "/" + path
-	logger.Info("path", path)
+	logger.Info("path:", path)
 	targetUrl := fmt.Sprintf("https://graph.microsoft.com/v1.0/me/drive/root:/%s:/children", path)
 	authenticationProvider, err := credential.NewAzureIdentityAuthenticationProviderByUserId(c.GetString("userId"))
 	if err != nil {
@@ -29,7 +29,7 @@ func GetFile(c *gin.Context) {
 		return
 	}
 
-	adapter, err := msgraphsdk.NewGraphRequestAdapter(auth)
+	adapter, err := msgraphsdk.NewGraphRequestAdapterWithParseNodeFactoryAndSerializationWriterFactory(auth, util.NewJsonParseNodeFactory(), util.NewJsonSerializationWriterFactory())
 	if err != nil {
 		logger.Infof("Error creating adapter: %v\n", err)
 		return
