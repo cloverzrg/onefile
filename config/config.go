@@ -19,15 +19,9 @@ type config struct {
 	} `json:"onedrive"`
 }
 
-type consulConfig struct {
-	Address    string `json:"address"`
-	Token      string `json:"token"`
-	ConfigFile string `json:"config_file"`
-}
-
 var Config config
-var ConsulConfig consulConfig
 var mu sync.Mutex
+var consulConfigFile string
 
 func BindJson(data []byte) (err error) {
 	mu.Lock()
@@ -54,16 +48,13 @@ func init() {
 		}
 		return
 	}
-	ConsulConfig = consulConfig{
-		Address:    os.Getenv("CONSUL_ADDRESS"),
-		Token:      os.Getenv("CONSUL_TOKEN"),
-		ConfigFile: os.Getenv("CONSUL_CONFIG_PATH"),
-	}
-	readConfigFromConfig(ConsulConfig.Address, ConsulConfig.Token, ConsulConfig.ConfigFile)
+
+	consulConfigFile = os.Getenv("CONSUL_CONFIG_PATH")
+	readConfigFromConfig(consulConfigFile)
 	go func() {
 		for {
 			time.Sleep(5 * time.Second)
-			readConfigFromConfig(ConsulConfig.Address, ConsulConfig.Token, ConsulConfig.ConfigFile)
+			readConfigFromConfig(consulConfigFile)
 		}
 	}()
 }

@@ -2,25 +2,22 @@ package config
 
 import (
 	"encoding/json"
-
 	"github.com/cloverzrg/onefile/logger"
 	"github.com/hashicorp/consul/api"
 )
 
 var consulClient *api.Client
 
-func readConfigFromConfig(address, token, configKey string) (err error) {
+func readConfigFromConfig(configKey string) (err error) {
 	defer func() {
 		if err != nil {
 			logger.Error(err)
 		}
 	}()
-	cfg := api.Config{
-		Address: address,
-		Scheme:  "https",
-		Token:   token,
-	}
-	consulClient, err = api.NewClient(&cfg)
+
+	// 此处回读取环境变量
+	cfg := api.DefaultConfig()
+	consulClient, err = api.NewClient(cfg)
 	if err != nil {
 		return err
 	}
@@ -53,7 +50,7 @@ func UpdateConfig() (err error) {
 		return err
 	}
 	kvPair := api.KVPair{
-		Key:   ConsulConfig.ConfigFile,
+		Key:   consulConfigFile,
 		Value: jsonbyte,
 	}
 	kvClient := consulClient.KV()
