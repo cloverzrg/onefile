@@ -18,7 +18,7 @@ func GetChildren(c *gin.Context) {
 	path = strings.Trim(path, "/")
 	path = "/" + path
 	logger.Info("path:", path)
-	targetUrl := fmt.Sprintf("https://graph.microsoft.com/v1.0/me/drive/root:/%s:/children", path)
+	targetUrl := fmt.Sprintf("https://graph.microsoft.com/v1.0/me/drive/root:/%s:/children?$select=id,name", path)
 	authenticationProvider, err := credential.NewAzureIdentityAuthenticationProviderByUserId(c.GetString("userId"))
 	if err != nil {
 		logger.Infof("Error creating adapter: %v\n", err)
