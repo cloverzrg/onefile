@@ -9,10 +9,14 @@ import (
 	a "github.com/microsoft/kiota-authentication-azure-go"
 	msgraphsdk "github.com/microsoftgraph/msgraph-sdk-go"
 	"github.com/microsoftgraph/msgraph-sdk-go/drives/item/root/children"
+	"strings"
 )
 
 func GetFile(c *gin.Context) {
 	path := c.Query("path")
+	path = strings.Trim(path, "/")
+	path = "/" + path
+	logger.Info("path", path)
 	targetUrl := fmt.Sprintf("https://graph.microsoft.com/v1.0/me/drive/root:/%s:/children", path)
 	authenticationProvider, err := credential.NewAzureIdentityAuthenticationProviderByUserId(c.GetString("userId"))
 	if err != nil {
