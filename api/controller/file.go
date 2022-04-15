@@ -13,7 +13,7 @@ import (
 )
 
 func GetFile(c *gin.Context) {
-	path := c.Query("path")
+	path := c.Param("path")
 	path = strings.Trim(path, "/")
 	path = "/" + path
 	logger.Info("path", path)
