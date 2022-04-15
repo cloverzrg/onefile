@@ -11,6 +11,6 @@ func SetRouter(r *gin.Engine) {
 	r.GET("/callback", controller.Callback)
 	r.GET("/token", controller.Token)
 	r.GET("/me", controller.GetMeInfo)
-	//r.GET("/me/drive/", controller.GetRoot)
-	r.GET("/me/drive/*path", controller.GetChildren)
+	r.GET("/me/drive", controller.GetInfo)
+	r.GET("/me/drive/root/*path", controller.GetChildren)
 }

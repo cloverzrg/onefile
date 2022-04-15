@@ -18,10 +18,6 @@ func GetChildren(c *gin.Context) {
 	path = strings.Trim(path, "/")
 	path = "/" + path
 	logger.Info("path:", path)
-	if path == "/" {
-		GetRoot(c)
-		return
-	}
 	targetUrl := fmt.Sprintf("https://graph.microsoft.com/v1.0/me/drive/root:/%s:/children", path)
 	authenticationProvider, err := credential.NewAzureIdentityAuthenticationProviderByUserId(c.GetString("userId"))
 	if err != nil {
@@ -59,7 +55,7 @@ func GetChildren(c *gin.Context) {
 	c.String(200, json2)
 }
 
-func GetRoot(c *gin.Context) {
+func GetInfo(c *gin.Context) {
 	client, err := onedrive.GetClientByUserId(c.GetString("userId"))
 	if err != nil {
 		logger.Error(err)
