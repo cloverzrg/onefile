@@ -14,7 +14,7 @@ import (
 	"gorm.io/gorm"
 )
 
-func getClientByUserId(userId string) (client *msgraphsdk.GraphServiceClient, err error) {
+func GetClientByUserId(userId string) (client *msgraphsdk.GraphServiceClient, err error) {
 	authProvider, err := credential.NewAzureIdentityAuthenticationProviderByUserId(userId)
 	if err != nil {
 		logger.Errorf("Error authentication provider: %v\n", err)

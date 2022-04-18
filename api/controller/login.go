@@ -37,7 +37,7 @@ func Callback(c *gin.Context) {
 	session := sessions.Default(c)
 	session.Set("userId", userId)
 	session.Save()
-	c.JSON(200, "login success")
+	c.Redirect(302, "/me")
 }
 
 func Token(c *gin.Context) {

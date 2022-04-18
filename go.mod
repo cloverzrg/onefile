@@ -6,10 +6,12 @@ require (
 	github.com/Azure/azure-sdk-for-go/sdk/azcore v0.22.0
 	github.com/gin-contrib/sessions v0.0.5-0.20220410115843-cbe59b06c315
 	github.com/gin-gonic/gin v1.7.7
+	github.com/google/uuid v1.3.0
 	github.com/hashicorp/consul/api v1.12.0
 	github.com/iyear/sqlite v1.0.2
+	github.com/microsoft/kiota-abstractions-go v0.3.0
 	github.com/microsoft/kiota-authentication-azure-go v0.1.0
-	github.com/microsoftgraph/msgraph-sdk-go v0.19.0
+	github.com/microsoftgraph/msgraph-sdk-go v0.19.1
 	github.com/sirupsen/logrus v1.8.1
 	golang.org/x/oauth2 v0.0.0-20220309155454-6242fa91716a
 	gorm.io/gorm v1.23.4
@@ -25,7 +27,6 @@ require (
 	github.com/go-playground/universal-translator v0.18.0 // indirect
 	github.com/go-playground/validator/v10 v10.10.1 // indirect
 	github.com/golang/protobuf v1.5.2 // indirect
-	github.com/google/uuid v1.3.0 // indirect
 	github.com/gorilla/context v1.1.1 // indirect
 	github.com/gorilla/securecookie v1.1.1 // indirect
 	github.com/gorilla/sessions v1.2.1 // indirect
@@ -42,11 +43,10 @@ require (
 	github.com/leodido/go-urn v1.2.1 // indirect
 	github.com/mattn/go-colorable v0.1.12 // indirect
 	github.com/mattn/go-isatty v0.0.14 // indirect
-	github.com/microsoft/kiota-abstractions-go v0.3.0 // indirect
 	github.com/microsoft/kiota-http-go v0.2.0 // indirect
-	github.com/microsoft/kiota-serialization-json-go v0.2.0 // indirect
+	github.com/microsoft/kiota-serialization-json-go v0.2.1 // indirect
 	github.com/microsoft/kiota-serialization-text-go v0.1.0 // indirect
-	github.com/microsoftgraph/msgraph-sdk-go-core v0.22.0 // indirect
+	github.com/microsoftgraph/msgraph-sdk-go-core v0.22.1 // indirect
 	github.com/mitchellh/go-homedir v1.1.0 // indirect
 	github.com/mitchellh/mapstructure v1.1.2 // indirect
 	github.com/modern-go/concurrent v0.0.0-20180306012644-bacd9c7ef1dd // indirect
