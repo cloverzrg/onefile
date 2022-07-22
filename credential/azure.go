@@ -18,11 +18,11 @@ type AzureIdentityAuthenticationProvider struct {
 	Expiry      time.Time
 }
 
-func (a AzureIdentityAuthenticationProvider) GetToken(ctx context.Context, options policy.TokenRequestOptions) (*azcore.AccessToken, error) {
+func (a AzureIdentityAuthenticationProvider) GetToken(ctx context.Context, options policy.TokenRequestOptions) (res azcore.AccessToken, err error) {
 	token, err := a.tokenSource.Token()
 	if err != nil {
 		logger.Error(err)
-		return nil, err
+		return res, err
 	}
 	if token.Expiry != a.Expiry {
 		// 更新token到库
@@ -30,15 +30,15 @@ func (a AzureIdentityAuthenticationProvider) GetToken(ctx context.Context, optio
 		if a.UserId == "" {
 			err = fmt.Errorf("userId is Empty")
 			logger.Error(err)
-			return nil, err
+			return res, err
 		}
 		err = model.UpdateTokenByUserId(db.DB, a.UserId, token.AccessToken, token.RefreshToken, token.TokenType, token.Expiry)
 		if err != nil {
 			logger.Error(err)
-			return nil, err
+			return res, err
 		}
 	}
-	return &azcore.AccessToken{
+	return azcore.AccessToken{
 		Token:     token.AccessToken,
 		ExpiresOn: token.Expiry,
 	}, nil
