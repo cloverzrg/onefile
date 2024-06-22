@@ -8,6 +8,7 @@ import (
 	"github.com/cloverzrg/onefile/util"
 	"github.com/gin-gonic/gin"
 	a "github.com/microsoft/kiota-authentication-azure-go"
+	jsonserialization "github.com/microsoft/kiota-serialization-json-go"
 	msgraphsdk "github.com/microsoftgraph/msgraph-sdk-go"
 	"github.com/microsoftgraph/msgraph-sdk-go/drives/item/root/children"
 	"strings"
@@ -30,7 +31,7 @@ func GetChildren(c *gin.Context) {
 		return
 	}
 
-	adapter, err := msgraphsdk.NewGraphRequestAdapterWithParseNodeFactoryAndSerializationWriterFactory(auth, util.NewJsonParseNodeFactory(), util.NewJsonSerializationWriterFactory())
+	adapter, err := msgraphsdk.NewGraphRequestAdapterWithParseNodeFactoryAndSerializationWriterFactory(auth, jsonserialization.NewJsonParseNodeFactory(), jsonserialization.NewJsonSerializationWriterFactory())
 	if err != nil {
 		logger.Infof("Error creating adapter: %v\n", err)
 		return
@@ -42,7 +43,7 @@ func GetChildren(c *gin.Context) {
 		return
 	}
 
-	result, err := client2.Get(nil)
+	result, err := client2.Get()
 	if err != nil {
 		logger.Infof("Error retrieving resource: %v\n", err)
 		return
@@ -61,7 +62,7 @@ func GetInfo(c *gin.Context) {
 		logger.Error(err)
 		return
 	}
-	driveInfo, err := client.Me().Drive().Get(nil)
+	driveInfo, err := client.Me().Drive().Get()
 	if err != nil {
 		logger.Error(err)
 		c.JSON(500, err.Error())

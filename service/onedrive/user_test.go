@@ -53,7 +53,8 @@ func TestGetDrive(t *testing.T) {
 	fmt.Println(itemable.GetValue())
 
 	// https://docs.microsoft.com/en-us/graph/api/driveitem-list-children?view=graph-rest-1.0&tabs=http
-	targetUrl := "https://graph.microsoft.com/v1.0/me/drive/root://程序自动创建的文件夹:/children"
+	path := "/程序自动创建的文件夹"
+	targetUrl := fmt.Sprintf("https://graph.microsoft.com/v1.0/me/drive/root:/%s:/children", path)
 
 	auth, err := a.NewAzureIdentityAuthenticationProvider(credential.NewLocalTokenProvider(token))
 	if err != nil {

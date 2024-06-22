@@ -53,7 +53,7 @@ func Callback(ctx context.Context, code string) (userId string, err error) {
 		logger.Errorf("Error creating client: %v\n", err)
 		return userId, err
 	}
-	userInfo, err := client.Me().Get(nil)
+	userInfo, err := client.Me().Get()
 	if err != nil {
 		logger.Errorf("Error creating client: %v\n", err)
 		return userId, err

@@ -13,7 +13,7 @@ func GetMeInfo(c *gin.Context) {
 		logger.Error(err)
 		return
 	}
-	userInfo, err := client.Me().Get(nil)
+	userInfo, err := client.Me().Get()
 	if err != nil {
 		logger.Error(err)
 		return
